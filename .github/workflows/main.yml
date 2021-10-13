@@ -15,6 +15,4 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: 
-            cd ${{ secrets.PROJECT_PATH }}
-            git clone https://github.com/stephensanwo/gallium-api.git
-            echo 'Successful github deployment'
+            cd ${{ secrets.PROJECT_PATH }} && git clone https://github.com/stephensanwo/gallium-api.git

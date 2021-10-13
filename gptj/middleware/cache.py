@@ -1,11 +1,22 @@
 import asyncio
 import aioredis
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+REDIS_AUTH = os.environ['REDIS_AUTH']
+
+if os.environ["APP_ENV"] == "production":
+    connection = f"redis://{REDIS_AUTH}@localhost:6379"
+
+else:
+    connection = "redis://localhost:6379"
 
 
 async def parse_data_to_cache(token, data):
 
-    redis = await aioredis.from_url("redis://localhost:6379",  db=5)
+    redis = await aioredis.from_url(connection, db=5)
 
     token_exists = await redis.exists(token)
 
@@ -30,7 +41,7 @@ def parse_to_str(x):
 
 async def get_data_from_cache(token):
 
-    redis = await aioredis.from_url("redis://localhost:6379",  db=5)
+    redis = await aioredis.from_url(connection, db=5)
 
     token_exists = await redis.exists(token)
 

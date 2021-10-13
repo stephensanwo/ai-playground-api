@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException, BackgroundTasks, WebSocket, Cookie, Depends, FastAPI, Query, WebSocket, status, Request
 from ..model.gptj import GPTJ
 from ..middleware.cache import parse_data_to_cache, get_data_from_cache
@@ -6,6 +8,15 @@ import uuid
 import aioredis
 
 chat = APIRouter()
+
+load_dotenv()
+REDIS_AUTH = os.environ['REDIS_AUTH']
+
+if os.environ["APP_ENV"] == "production":
+    connection = f"redis://{REDIS_AUTH}@localhost:6379"
+
+else:
+    connection = "redis://localhost:6379"
 
 
 async def get_cookie_or_token(
@@ -34,7 +45,7 @@ async def token_generator(name: str, request: Request):
 
     data = {"name": name, "token": token, "ip": client}
 
-    redis = await aioredis.from_url("redis://localhost:6379",  db=6)
+    redis = await aioredis.from_url(connection, db=6)
     await redis.set(token, str(data))
 
     return data
@@ -48,7 +59,7 @@ async def token_generator(name: str, request: Request):
 @chat.post("/refresh_token")
 async def refresh_token(token: str):
 
-    redis = await aioredis.from_url("redis://localhost:6379",  db=5)
+    redis = await aioredis.from_url(connection, db=6)
     await redis.delete(token)
 
     return None

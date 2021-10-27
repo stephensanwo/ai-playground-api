@@ -13,7 +13,7 @@ api.include_router(chat)
 
 origins = [
     "http://localhost:3019",
-    "http://192.168.0.149:3019d"
+    "http://192.168.0.149:3019"
 ]
 
 api.add_middleware(

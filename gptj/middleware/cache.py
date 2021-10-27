@@ -8,7 +8,7 @@ load_dotenv()
 REDIS_AUTH = os.environ['REDIS_AUTH']
 
 if os.environ["APP_ENV"] == "production":
-    connection = f"redis://{REDIS_AUTH}@localhost:6379"
+    connection = f"redis://{REDIS_AUTH}@178.62.22.115:6379"
 
 else:
     connection = "redis://localhost:6379"
